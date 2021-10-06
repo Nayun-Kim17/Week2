@@ -10,7 +10,7 @@
     font-weight: normal;
     font-style: normal;}
     	h1{font-family: '양진체'; color:#FD3C0F; font-size: 5vw; text-align: center;}
-		p{text}
+		p{text-align: center; font-size: 5vw;}
 		button{width:18vw; height:6vh; border-radius: 5vw; cursor: pointer; align-items: center;}
 		button > p {font-family: '양진체'; font-size: 1.2vw; text-align: center center; margin:auto;}
 		.checkPattern{
@@ -31,94 +31,88 @@
 </head>
 <body class="checkPattern">
 
-	<audio src="./beep.mp3"></audio>
+	<audio id="beep"src="./beep.mp3"></audio>
 
 	<h1>Pomodoro Timer</h1>
+	<p id="status">뽀모도로 공부법</p>
 
 	<p id="pomoNum" class="fixed"></p>
 
-	<p id="current"></p>
+	<p id="current">25:00</p>
 
-	<input type="color" id="color1">
-
-	<input type="color" id="color2">
 
 	<div class="center">
-		<button id="St" class="go" onclick="first();"> <p>Start</p></button>
+		<button id="St" class="go" onclick="studyTime();" > <p>Start</p></button>
 	</div>
 
 
 
 	<script type="text/javascript">
 
-		const btn = document.querySelector("button");
-		const txt = document.querySelector("p");
+	var studyTime = function studyTime(){
+		var time = 60*25;
+		var min = "25"
+		var sec = "00"
 
-		btn.addEventListener("click",But);
+		var x = setInterval(function(){
+			min = parseInt(time/60);
+			sec = time % 60;
 
-		var state = "";
+			min = min < 10 ? "0" + min : min;
+        	sec = sec < 10 ? "0" + sec : sec;
+
+			document.getElementById("current").innerHTML = min + ':' + sec; time--;
+
+			if (time < 0) {
+				clearInterval(x);
+				document.getElementById("status").innerHTML = "공부 끝!"
+			}
+		},1000);
+	}
 
 
-		/*document.getElementByClassName("checkPattern").style.backgroundImage = "linear-gradient(90deg,red 5%, white 0%),linear-gradient(red 3%, white 3%)";*/
-		function But() {
-			if (state !== "stop"){
-				first();
-				btn.textContent = "Stop";
-				
-				document.getElementById('St').className = "stop";
-				state = "stop";
-				
-		} else {btn.textContent = "Start";
-				
-				document.getElementById('St').className = "go";
-				state = "go";
-				
-		}}
+	var restTime = function restTime(){
+		var time = 60*5;
+		var min = "05"
+		var sec = "00"
+
+		var x = setInterval(function(){
+			min = parseInt(time/60);
+			sec = time % 60;
+
+			min = min < 10 ? "0" + min : min;
+        	sec = sec < 10 ? "0" + sec : sec;
+
+			document.getElementById("current").innerHTML = min + ':' + sec; time--;
+
+			if (time < 0) {
+				clearInterval(x);
+				document.getElementById("status").innerHTML = "쉬는시간 끝!"
+			}
+		},1000);
+	}
+
+	function restTime(){
+		var time = 60*30;
+		var min = "30"
+		var sec = "00"
+
+		var x = setInterval(function(){
+			min = parseInt(time/60);
+			sec = time % 60;
+
+			min = min < 10 ? "0" + min : min;
+        	sec = sec < 10 ? "0" + sec : sec;
+
+			document.getElementById("current").innerHTML = min + ':' + sec; time--;
+
+			if (time < 0) {
+				clearInterval(x);
+				document.getElementById("status").innerHTML = "한 세트 끝!"
+			}
+		},1000);
+	}
 		
-		
-		pomo = 0;
-	
-		document.getElementById("pomoNum").innerText = pomo + "pomo";
-		
-		function first() {setTimeout(breakTime,3000);}
-		function breakTime() {
-			beep.play();
-			pomo = pomo + 1;
-			setTimeout(studyTime,1000);
-		}
-		function studyTime(){
-			beep.play();
-			setTimeout(breakTime,3000);
-		}
-
-		var now = new Date();
-		var STimer = duration, minutes, seconds;
-		setInterval(function(){
-			minutes = parseInt(STimer / 60, 10);
-			seconds = parseInt(STimer % 60, 10);
-			/*( 결과 = 조건 A ? 참일때의 결과 B : 거짓일때의 결과 C ) 의 형식이죠.
-			즉 A 라는 조건이 참이라면 B를 리턴하고 거짓이라면 C를 리턴합니다.*/
-
-			minutes = minutes < 10 ? "0" + minutes : minutes;
-        	seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        	document.getElementById("current").innerText = minutes + ":" + seconds;
-
-        	if (--timer < 0) {
-      			timer = duration;}
-		    if(timer === 0) {
-		      clearInterval(interval);
-		      document.getElementById("current").innerText = "공부 끝!";}
-		  },1000);
-
-
-		window.onload = function () {var minutes = 10;
-
-			  var fiveMinutes = (60 * minutes) - 1,
-			    display = ocument.getElementById("current");
-			  startTimer(fiveMinutes, display);
-			};
-
 	</script>
 </body>
 </html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pomodoro Timer</title>
+
+	<style type="text/css">
+		@font-face {
+    font-family: '양진체';
+    src: url('https://cdn.jsdelivr.net/gh/supernovice-lab/font@0.9/yangjin.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;}
+    	h1{font-family: '양진체'; color:#FD3C0F; font-size: 5vw; text-align: center;}
+		p{text}
+		button{width:18vw; height:6vh; border-radius: 5vw; cursor: pointer; align-items: center;}
+		button > p {font-family: '양진체'; font-size: 1.2vw; text-align: center center; margin:auto;}
+		.checkPattern{
+			background-image:linear-gradient(90deg,#BDF1F4 5%, white 0%),linear-gradient(#BDF1F4 3%, white 3%);
+			background-blend-mode: multiply;
+			background-position: 0 0, 10px 10px;
+			background-size: 3vh 3vh;}
+
+		.go{background:white;
+			border:2px solid #28A226; font-family: '양진체'; font-size: 1.2vw; text-align: center center; margin:auto; color:#28A226;}
+
+		.stop{background:#FD3C0F;
+			border:0px solid; font-family: '양진체'; font-size: 1.2vw; text-align: center center; margin:auto; color:white;}
+
+		.center {width:18vw; margin:auto;}
+		.fixed {position: fixed; top:0; right:5vw;}
+	</style>
+</head>
+<body class="checkPattern">
+
+	<audio src="./beep.mp3"></audio>
+
+	<h1>Pomodoro Timer</h1>
+
+	<p id="pomoNum" class="fixed"></p>
+
+	<p id="current"></p>
+
+	<input type="color" id="color1">
+
+	<input type="color" id="color2">
+
+	<div class="center">
+		<button id="St" class="go" onclick="first();"> <p>Start</p></button>
+	</div>
+
+
+
+	<script type="text/javascript">
+
+		const btn = document.querySelector("button");
+		const txt = document.querySelector("p");
+
+		btn.addEventListener("click",But);
+
+		var state = "";
+
+
+		/*document.getElementByClassName("checkPattern").style.backgroundImage = "linear-gradient(90deg,red 5%, white 0%),linear-gradient(red 3%, white 3%)";*/
+		function But() {
+			if (state !== "stop"){
+				first();
+				btn.textContent = "Stop";
+				
+				document.getElementById('St').className = "stop";
+				state = "stop";
+				
+		} else {btn.textContent = "Start";
+				
+				document.getElementById('St').className = "go";
+				state = "go";
+				
+		}
+		}
+		
+
+		pomo = 0;
+	
+		document.getElementById("pomoNum").innerText = pomo + "pomo";
+		
+		function first() {setTimeout(breakTime,3000);}
+		function breakTime() {
+			beep.play();
+			pomo = pomo + 1;
+			setTimeout(studyTime,1000);
+		}
+		function studyTime(){
+			beep.play();
+			setTimeout(breakTime,3000);
+		}
+
+		var now = new Date();
+		var STimer = duration, minutes, seconds;
+		setInterval(function(){
+			minutes = parseInt(STimer / 60, 10);
+			seconds = parseInt(STimer % 60, 10);
+			/*( 결과 = 조건 A ? 참일때의 결과 B : 거짓일때의 결과 C ) 의 형식이죠.
+			즉 A 라는 조건이 참이라면 B를 리턴하고 거짓이라면 C를 리턴합니다.*/
+
+			minutes = minutes < 10 ? "0" + minutes : minutes;
+        	seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        	document.getElementById("current").innerText = minutes + ":" + seconds;
+
+        	if (--timer < 0) {
+      			timer = duration;}
+		    if(timer === 0) {
+		      clearInterval(interval);
+		      document.getElementById("current").innerText = "공부 끝!";}
+		  },1000);
+
+
+		window.onload = function () {var minutes = 10;
+
+			  var fiveMinutes = (60 * minutes) - 1,
+			    display = ocument.getElementById("current");
+			  startTimer(fiveMinutes, display);
+			};
+
+	</script>
+</body>
+</html>

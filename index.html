@@ -13,7 +13,7 @@
 		p{text-align: center; font-size: 5vw;}
 		button{width:18vw; height:6vh; border-radius: 5vw; cursor: pointer; align-items: center; }
 		button > p {font-family: '양진체'; font-size: 1.2vw; text-align: center center; margin:auto;}
-		img {position: absolute; width:12vw; height:auto;top:0; left:0;}
+		img {position: absolute; width:12vw; height:auto;top:0; left:0; mix-blend-mode: multiply;}
 		.checkPattern{
 			background-color: white;}
 
@@ -31,7 +31,7 @@
 	</style>
 </head>
 <body class="checkPattern">
-	<img src="tomato.png" id="tomato">
+	<div id="tomato"></div>
 	<audio id="beep"src="./beep.mp3"></audio>
 	<div class="flex">
 		<h1>Pomodoro Timer</h1>
@@ -52,8 +52,7 @@
 
 
 	<script type="text/javascript">
-	
-
+	alert("*테스트 하기 쉽도록 1분=1초로 단위를 줄여 두었습니다.\n뽀모도로 타이머란?\n   25분 + 5분휴식\n   25분 + 5분휴식\n   25분 + 5분휴식\n   25분 + 30분휴식\n를 한 세트로 하는 공부 방법을 적용한 타이머 입니다.\n하나씩 생겨나는 토마토를 눌러 보세요.:)");
 function moreTomato(){
 			
 			var t = document.createElement("img");
@@ -61,41 +60,44 @@ function moreTomato(){
 			t.className = "tomato"
 			t.style.width = randomT(12,22) + "vw";
 			t.style.height = "auto";
+			t.style.zIndex = "2";
 			t.style.left = Math.random()*screen.availWidth + "px";
 			t.style.top = Math.random()*screen.availHeight + "px";
 			document.getElementById('tomato').appendChild(t);
-			
+			t.onclick = function(){
+		t.src = "./tomatoInk.png";
+	}
+
 			function randomT(min, max) {
 						min = Math.ceil(min);
 						max = Math.floor(max);
 						return Math.floor(Math.random() * (max - min + 1)) + min;
 					}
 		}
-		
-	tomato.onclick = function(){
-		tomato.src = "./tomatoInk.png";
-	}
 
-	num = 1;
-	z = num;
+		
+		
+	 
+	z = 1;
 	var oneCycle = function oneCycle() {
 		console.log(z);
 		console.log(state);
 		
 		if (z % 4 !== 0){
 			var y; 
-			z = num; 
+			document.getElementById("status").innerHTML = "#공부중 " + "#" + z + "세트"
 			b = Set1(); 
 			y = b;
-			num = num + 1;
-			moreTomato();
-		} else { 
+			
+
+			
+		} else if (z % 4 == 0){ 
 			var y;
-			z = num;
+			
 			c = Set2(); 
 			y = c; 
-			num = num + 1;
-			moreTomato();
+		
+			
 			}
 	}
 
@@ -123,7 +125,7 @@ const btn = document.querySelector("button");
 		}}
 	var Set1 = function Set1(){
 
-			var time = 60*25;
+			var time = 25;
 			var min = "25"
 			var sec = "00"
 
@@ -139,12 +141,14 @@ const btn = document.querySelector("button");
 				document.getElementById("status").innerHTML = "#공부중 " + "#" + z + "세트"
 				if (state !== "stop"){window.clearInterval(firSet);
 
-					document.getElementById("status").innerHTML = "일시정지"}
+					document.getElementById("status").innerHTML = "#일시정지"}
 				if (time < 0) {
+					beep.play();
 					clearInterval(firSet);
-					document.getElementById("status").innerHTML = "공부 끝!";
-					
+					document.getElementById("status").innerHTML = "#공부_끝 " + "#쉬는시간";
+					z++
 					breakTime();
+					moreTomato();
 					if (state == "go") {clearInterval(x); return Set1;}
 
 				}
@@ -152,7 +156,7 @@ const btn = document.querySelector("button");
 		
 	}
 	var Set2 = function Set2(){
-		var time = 60*25;
+		var time = 25;
 		var min = "25"
 		var sec = "00"
 
@@ -167,9 +171,11 @@ const btn = document.querySelector("button");
 			if (state !== "stop"){clearInterval(secSet);}
 			if (time < 0) {
 				clearInterval(secSet);
-				document.getElementById("status").innerHTML = "공부 끝!";
+				document.getElementById("status").innerHTML = "#공부_끝 " + "#쉬는시간";
 				restTime();
-				
+				beep.play();
+				moreTomato();
+				z++
 			}
 		},1000);
 	}
@@ -178,7 +184,7 @@ const btn = document.querySelector("button");
 
 	
 	var breakTime = function breakTime(){
-		var time = 60*5;
+		var time = 5;
 		var min = "05"
 		var sec = "00"
 
@@ -190,12 +196,12 @@ const btn = document.querySelector("button");
         	sec = sec < 10 ? "0" + sec : sec;
 
 			document.getElementById("current").innerHTML = min + ':' + sec; time--;
-			if (state !== "stop"){clearInterval(fiveMin);}
+			if (state !== "stop"){clearInterval(fiveMin); beep.play();}
 			if (time < 0) {
-				
+				beep.play();
 				clearInterval(fiveMin);
 				document.getElementById("status").innerHTML = "쉬는시간 끝!"
-				Set1();
+				oneCycle();
 			}
 		},1000);
 	}
@@ -203,7 +209,7 @@ const btn = document.querySelector("button");
 	
 	var restTime = function restTime(){
 
-			var time = 60*30;
+			var time = 30;
 			var min = "30"
 			var sec = "00"
 
@@ -215,11 +221,12 @@ const btn = document.querySelector("button");
 	        	sec = sec < 10 ? "0" + sec : sec;
 
 				document.getElementById("current").innerHTML = min + ':' + sec; time--;
-				if (state !== "stop"){window.clearInterval(thirtyMin);}
+				if (state !== "stop"){window.clearInterval(thirtyMin); beep.play();}
 				if (time < 0) {
 					clearInterval(thirtyMin);
-					document.getElementById("status").innerHTML = "한 세트 끝!"
+					document.getElementById("status").innerHTML = (z % 4) + "Pomo_끝!"
 					oneCycle();
+					beep.play();
 				}
 			},1000);
 	}

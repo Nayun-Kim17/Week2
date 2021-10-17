@@ -33,6 +33,7 @@
 <body class="checkPattern">
 	<div id="tomato"></div>
 	<audio id="beep"src="./beep.mp3"></audio>
+	<audio id="squeeze" src="./squeeze.mp3"></audio>
 	<div class="flex">
 		<h1>Pomodoro Timer</h1>
 		<div class="center">
@@ -66,6 +67,7 @@ function moreTomato(){
 			document.getElementById('tomato').appendChild(t);
 			t.onclick = function(){
 		t.src = "./tomatoInk.png";
+		squeeze.play();
 	}
 
 			function randomT(min, max) {

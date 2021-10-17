@@ -9,15 +9,13 @@
     src: url('https://cdn.jsdelivr.net/gh/supernovice-lab/font@0.9/yangjin.woff') format('woff');
     font-weight: normal;
     font-style: normal;}
-    	h1{font-family: '양진체'; color:#FD3C0F; font-size: 5vw; text-align: center;}
+    	h1{font-family: '양진체'; color:#FD3C0F; font-size: 8vw; text-align: left; margin:1vw 2vw;}
 		p{text-align: center; font-size: 5vw;}
-		button{width:18vw; height:6vh; border-radius: 5vw; cursor: pointer; align-items: center;}
+		button{width:18vw; height:6vh; border-radius: 5vw; cursor: pointer; align-items: center; }
 		button > p {font-family: '양진체'; font-size: 1.2vw; text-align: center center; margin:auto;}
+		img {position: absolute; width:12vw; height:auto;top:0; left:0;}
 		.checkPattern{
-			background-image:linear-gradient(90deg,#BDF1F4 5%, white 0%),linear-gradient(#BDF1F4 3%, white 3%);
-			background-blend-mode: multiply;
-			background-position: 0 0, 10px 10px;
-			background-size: 3vh 3vh;}
+			background-color: white;}
 
 		.go{background:white;
 			border:2px solid #28A226; font-family: '양진체'; font-size: 1.2vw; text-align: center center; margin:auto; color:#28A226;}
@@ -25,36 +23,140 @@
 		.stop{background:#FD3C0F;
 			border:0px solid; font-family: '양진체'; font-size: 1.2vw; text-align: center center; margin:auto; color:white;}
 
-		.center {width:18vw; margin:auto;}
+		.center {width:18vw; margin:auto 0;}
+		.flex{display: flex;}
 		.fixed {position: fixed; top:0; right:5vw;}
+		.status {font-family: "Noto Sans", sans-serif; font-weight: 700; font-size:4vw; margin:0 2vw; z-index:3; color:green; text-align: left;}
+		.current {font-family: "Noto Sans", sans-serif; font-weight: 700; font-size:5vw; text-align: center center; position:fixed; top:calc(50vh - 7.5vw); left:calc(50vw - 7.5vw);z-index:10;}
 	</style>
 </head>
 <body class="checkPattern">
-
+	<img src="tomato.png" id="tomato">
 	<audio id="beep"src="./beep.mp3"></audio>
-
-	<h1>Pomodoro Timer</h1>
-	<p id="status">뽀모도로 공부법</p>
+	<div class="flex">
+		<h1>Pomodoro Timer</h1>
+		<div class="center">
+				<button id="St" class="go"  > <p>Start</p></button>
+		</div>
+	</div>
+	
+	<p id="status" class="status"></p>
 
 	<p id="pomoNum" class="fixed"></p>
 
-	<p id="current">25:00</p>
+	<p id="current" class="current">25:00</p>
 
 
-	<div class="center">
-		<button id="St" class="go" onclick="studyTime();" > <p>Start</p></button>
-	</div>
+	
 
 
 
 	<script type="text/javascript">
+	
 
-	var studyTime = function studyTime(){
+function moreTomato(){
+			
+			var t = document.createElement("img");
+			t.src = "./tomato.png";
+			t.className = "tomato"
+			t.style.width = randomT(12,22) + "vw";
+			t.style.height = "auto";
+			t.style.left = Math.random()*screen.availWidth + "px";
+			t.style.top = Math.random()*screen.availHeight + "px";
+			document.getElementById('tomato').appendChild(t);
+			
+			function randomT(min, max) {
+						min = Math.ceil(min);
+						max = Math.floor(max);
+						return Math.floor(Math.random() * (max - min + 1)) + min;
+					}
+		}
+		
+	tomato.onclick = function(){
+		tomato.src = "./tomatoInk.png";
+	}
+
+	num = 1;
+	z = num;
+	var oneCycle = function oneCycle() {
+		console.log(z);
+		console.log(state);
+		
+		if (z % 4 !== 0){
+			var y; 
+			z = num; 
+			b = Set1(); 
+			y = b;
+			num = num + 1;
+			moreTomato();
+		} else { 
+			var y;
+			z = num;
+			c = Set2(); 
+			y = c; 
+			num = num + 1;
+			moreTomato();
+			}
+	}
+
+const btn = document.querySelector("button");
+		const txt = document.querySelector("p");
+
+		btn.addEventListener("click",But);
+
+		var state = "";
+
+		function But() {
+			if (state !== "stop"){
+				
+				btn.textContent = "Stop";
+				
+				document.getElementById('St').className = "stop";
+				state = "stop";
+				oneCycle();
+				
+		} else if (state == "stop") {btn.textContent = "Start";
+				
+				document.getElementById('St').className = "go";
+				state = "go";
+				return Set1;
+		}}
+	var Set1 = function Set1(){
+
+			var time = 60*25;
+			var min = "25"
+			var sec = "00"
+
+			var firSet = setInterval(function(){
+				min = parseInt(time/60);
+				sec = time % 60;
+
+				min = min < 10 ? "0" + min : min;
+	        	sec = sec < 10 ? "0" + sec : sec;
+
+				document.getElementById("current").innerHTML = min + ':' + sec; time--;
+
+				document.getElementById("status").innerHTML = "#공부중 " + "#" + z + "세트"
+				if (state !== "stop"){window.clearInterval(firSet);
+
+					document.getElementById("status").innerHTML = "일시정지"}
+				if (time < 0) {
+					clearInterval(firSet);
+					document.getElementById("status").innerHTML = "공부 끝!";
+					
+					breakTime();
+					if (state == "go") {clearInterval(x); return Set1;}
+
+				}
+			},1000);
+		
+	}
+	var Set2 = function Set2(){
 		var time = 60*25;
 		var min = "25"
 		var sec = "00"
 
-		var x = setInterval(function(){
+		var secSet = setInterval(function(){
 			min = parseInt(time/60);
 			sec = time % 60;
 
@@ -62,21 +164,25 @@
         	sec = sec < 10 ? "0" + sec : sec;
 
 			document.getElementById("current").innerHTML = min + ':' + sec; time--;
-
+			if (state !== "stop"){clearInterval(secSet);}
 			if (time < 0) {
-				clearInterval(x);
-				document.getElementById("status").innerHTML = "공부 끝!"
+				clearInterval(secSet);
+				document.getElementById("status").innerHTML = "공부 끝!";
+				restTime();
+				
 			}
 		},1000);
 	}
 
 
-	var restTime = function restTime(){
+
+	
+	var breakTime = function breakTime(){
 		var time = 60*5;
 		var min = "05"
 		var sec = "00"
 
-		var x = setInterval(function(){
+		var fiveMin = setInterval(function(){
 			min = parseInt(time/60);
 			sec = time % 60;
 
@@ -84,35 +190,42 @@
         	sec = sec < 10 ? "0" + sec : sec;
 
 			document.getElementById("current").innerHTML = min + ':' + sec; time--;
-
+			if (state !== "stop"){clearInterval(fiveMin);}
 			if (time < 0) {
-				clearInterval(x);
+				
+				clearInterval(fiveMin);
 				document.getElementById("status").innerHTML = "쉬는시간 끝!"
+				Set1();
 			}
 		},1000);
 	}
 
-	function restTime(){
-		var time = 60*30;
-		var min = "30"
-		var sec = "00"
+	
+	var restTime = function restTime(){
 
-		var x = setInterval(function(){
-			min = parseInt(time/60);
-			sec = time % 60;
+			var time = 60*30;
+			var min = "30"
+			var sec = "00"
 
-			min = min < 10 ? "0" + min : min;
-        	sec = sec < 10 ? "0" + sec : sec;
+			var thirtyMin = setInterval(function(){
+				min = parseInt(time/60);
+				sec = time % 60;
 
-			document.getElementById("current").innerHTML = min + ':' + sec; time--;
+				min = min < 10 ? "0" + min : min;
+	        	sec = sec < 10 ? "0" + sec : sec;
 
-			if (time < 0) {
-				clearInterval(x);
-				document.getElementById("status").innerHTML = "한 세트 끝!"
-			}
-		},1000);
+				document.getElementById("current").innerHTML = min + ':' + sec; time--;
+				if (state !== "stop"){window.clearInterval(thirtyMin);}
+				if (time < 0) {
+					clearInterval(thirtyMin);
+					document.getElementById("status").innerHTML = "한 세트 끝!"
+					oneCycle();
+				}
+			},1000);
 	}
-		
+
+	
+	
 	</script>
 </body>
 </html>
